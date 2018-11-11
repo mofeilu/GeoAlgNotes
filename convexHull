@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------------------------
+given a set of points, find the convex hull (smallest convex set containing all the points)
+-----------------------------------------------------------------------------------------------
+
+brute-force algorithm:
+(1)based on the two observation: edges of convex hull of P connect pairs of points in P
+(2)p-q is on convex hull if all other points are CCW of pq.
+we have: 
+for all pairs of points p and q in P, compute ccw(p,q,x) for all other x in P,  p-q is on hull if all values are positive
+
+
+package wrap algorithm:
+start with point with smallest y coord, rotate sweep line around current point in ccw direction,
+first point hit is on the hull, we update current point and repeat the process.
+
+
+Graham Scan algorithm:
+choose point p with smallest y-coord.
+sort remaining points by polar angle w.r.t p to get simple polygon.
+we consider points in simple polygon in order, and discard those that would create a clockwise turn.
+
