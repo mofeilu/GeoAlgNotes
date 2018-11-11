@@ -1,0 +1,15 @@
+(1) One classical primitive Operation is line segment intersection.
+
+soluton: assme we have (l1.p1, l1.p2),  (l2.p1, l2.p2).  The intuition is that l1.p1 and l1.p2 must be at opposite side of l2.
+To make sure intersect, we also need to l2.p1 and l2.p2 be at opposite side of l1.  This can be expressed equavelently as: 
+
+l1 intersect l2 if and only if
+CCW of (l1.p1, l1.p2, l2.p1) different from CCW of (l1.p1, l1.p2, l2.p2)
+and CCW of (l2.p1, l2.p2, l1.p1) different from CCW of (l2.p1, l2.p2, l1.p2)
+
+formally,  we need: 
+ccw(l1.p1, l1.p2, l2.p1) * ccw(l1.p1, l1.p2, l2.p2) <= 0  && ccw(l2.p1, l2.p2, l1.p1) * ccw (l2.p1, l2.p2, l1.p2) <= 0 
+
+
+
+
