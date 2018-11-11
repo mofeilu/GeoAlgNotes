@@ -1,0 +1,28 @@
+Problem:
+given N points in plane, find a pair with smallest Euclidean distance between them.
+
+brute force method would take O(N^2) complexity, we
+want O(Nlog(N)) solution
+
+Basic idea: divide and conquer.
+(1) Divide: draw vertical line L that roughly N/2 points on each side
+(2) conquer: find cloest pair in each side recursively.
+(3) combine: find cloest pair with one point in each side
+(4) return the best of 3 solutions.
+
+step (3) seems take O(N^2), but keep in mind that with results of step (2), we can constrain our search:
+assume step (2) gives min dist pair value delta.  then for step (3), we only need to consider points within  delta of line L,
+which is a 2*delta strip centered with line L.
+
+To push further, within this 2*delta strip, we can sort points according to y-coord. remember that within each side, the min dist
+between pairs >= delta.  so we can partition the 2*delta strip into delta/2 * delta/2 cells, then no two points would be in the same cell,
+and we can prove that with points sorted in y-coord, for each point, we only need to consider 11 nearest neighbors in order to 
+find min dist that may be smaller than delta.
+
+
+
+
+
+
+
+
