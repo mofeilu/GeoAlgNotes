@@ -1,0 +1,68 @@
+ref: https://www.cs.cmu.edu/~ckingsf/bioinfo-lectures/kdtrees.pdf
+
+KD tree is useful when try to find a nearest neighbor in space quickly.
+
+KD tree has the following feature:
+(1) each level has a "cutting dimension"
+(2) cycle through the dimensions as you walk down the tree ( in 2d: x-y-x-y ... )
+(3) each node containts a point P ( in 2d: (x,y) )
+(4) to find (x',y'), only need to compare coord from the cutting dim. 
+   if lesser, go left subtree,  
+   if equal or greater, go right subtree.
+
+cutting dimension cd is related to tree level L by:   
+cd = L%dim,  where dim is the dimension of the problem
+
+-----------------------
+insert algorithm:
+-----------------------
+recursion is needed for insert，
+
+insert(Point x, KDNode t, int cd)  // insert point x in KD Tree with root node t, with cutting dimension of node t cd.
+{
+  if (t == NULL) t = new KDNode(x)
+  else if ( x == t.data) return error  // duplicate value
+  else if ( x[cd] < t.data[cd]
+    t.left = insert(x, t.left, (cd+1)%dim
+  else 
+    t.right = insert(x, t.right, (cd+1)%dim)
+  return t
+}
+
+
+-----------------------
+find min algorithm
+-----------------------
+find the point with smallest value in dth dim.
+
+idea:
+recursively traverse the tree,
+(1) if cd == d, then minimum can't be in the right subtree, we recurse on the left subtree if it's not null.  
+    when left subtree is null, then minimum should be current node
+(2) if cd != d, minimum could be in either subtree, so we need to recurse on both subtree and also compare to current node
+
+
+Point findmin(KDNode t, int d, int cd)
+{
+  if (t == NULL) return NULL
+  
+  if (cd == d) { 
+     if (t.left == NULL) return t.data
+     else return findmin(t.left, d, (cd+1)%dim)
+  } else {
+     return min(findmin(t.left, d, (cd+1)%dim), find min(t.right, d, (cd+1)%dim), t.data)
+  }
+}
+
+
+--------------------------
+delete algorithm
+--------------------------
+
+
+
+
+
+
+
+
