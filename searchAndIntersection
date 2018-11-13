@@ -77,7 +77,43 @@ we can simply project p and abc to x-y, y-z or x-z plane.  The specific choice d
 This projection is simple because we can just throw away the third coordinate! 
 
 
------------------------
+
+------------------------------
+Point in polygon
+------------------------------
+For convex polygon, the problem is trivial, because we can use the same “signed area” method as in “point in triangle” problem.  
+We need to consider the case when polygon is non-convex.
+
+We use the so called “ray crossing” alg:  draw a ray from q in arbitrary direction (for example, +x),  
+If the ray intersect the boundary of polygon P even times, then it is outside, otherwise it is inside.
+
+This simple alg could not deal with corner cases such as ray hit a vertex or be collinear with one polgygon edge, 
+to solve this problem, we add one more condition:
+Assume ray R is +x dir,  for edge e be counted as “crossing”,  one of e’s end point need to be strictly above R, 
+and the other is below or on R.
+
+The ray crossing alg can be generalized to 3D case:  “point in polyhedron”, 
+the difficulty here is still degeneracies: ray hit a vertex or hit an edge or collinear with an edge.  
+One solution is that we can generate ray in random dir, 
+if there’s degeneracy we simply discard and regenerate a ray until there’s no degeneracies.
+
+
+----------------------------------------
+Intersection of line segments
+--------------------------------------
+Given a collection of n segments in plane,  how do we efficiently calculate all intersections.
+A brute-force alg take O(n^2) time,  we want sth O(n log n).
+This is the famous “Bentley-Ottmann” alg, which is based on line sweeping.
+Here’s the brief idea of sweep line alg:
+We sweep the line l over the segments (for example top-down),  only stopping at events of 3 type:
+(1) Hit top endpoint of a segment,  (2) pass bottom endpoint of a segment,  (3)reach intersection point of two segment.
+
+We maintain two dynamic data structures:
+L for list of segments pierced by l.
+Q for all the event sorted by height (endpoints, intersection points)
+
+L, Q must support fast insertion and deletion, we usually balanced search tree to deal with that.
+
 
 
 
