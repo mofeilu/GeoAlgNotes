@@ -1,1 +1,95 @@
 
+Search and intersection
+----------------------------------------------
+Segment Segment intersection
+---------------------------------------------
+Calculate the intersection of line segment Lab and Lcd, where a, b, c, d are points in 2D plane
+We already know how to tell if two line segments intersect (use 4 CCW calculation), but in order to 
+find out the intersection point, we need different alg.
+
+Idea:  the point p on line Lab could be parameterized as :  p(s) = a + s*(b-a),  
+similarly,  point q on line Lcd could be written as: q(t) = c + t*(d-c).
+
+Intersection of Lab and Lcd need:  p(s) = q(t), which can be expanded as:
+(bx – ax)*s  +  (cx –dx)* t = cx – ax
+(by – ay)*s  + (cy – dy)* t = cy – ay
+
+The determinant:  Delta = (bx – ax)*(cy-dy) – (cx-dx)*(by-ay)
+
+When delta != 0,  line Lab and Line Lcd are not parallel and  will intersect at point given by parameter s, t.
+Solve for s and t,  if 0<=s<=1 && 0 <=t <=1,   we can tell line segment Lab and Lcd intersect.
+
+There’s one exception of the above algoritm, if Lab is collinear with Lcd and they overlap,  
+we need additional routine to deal with that
+
+
+------------------------------------------
+Segment plane intersection
+-----------------------------------------
+Assume we have triangle T = abc and line segment qr,  we need to determine if qr intersect abc.  
+(this has important application such as ray tracing in computer graphics)
+
+To solve this problem, we need first determine if qr intersect with plane containing triangle abc.
+
+We again use a parameterized approach:  any point p on line qr would be:
+p(t) = q + (r-q) * t
+Assume that plane determined by abc has normal vector N, 
+then for any point x on plane, we have :   dot(x, N)  = D,  where D is the distance from origin to plane.
+
+We can solve N by cross product of vector ab and vector ac  (assume a, b, c form CCW)  and normalize:
+N = ((b – a)  X  (c – a)) /  norm( (b- a) X (c-a) )
+D = dot(a, N)
+
+Then for the intersection of line qr to the plane, we should have:
+Dot(p(t), N) = D 
+--> Dot(q + (r-q)*t,   N) = D 
+--> t = (D – dot(q, N) ) / dot(r-q,  N)
+
+If dot(r-q, N) != 0 &&  0<=t <=1,  we can confirm that line segment qr intersect plane abc.
+Again, we need additional routine to deal with the case that qr parallel to plane abc but is in plane abc.
+
+-----------------------------------------
+Segment triangle intersection
+----------------------------------------
+Once we determined segment plane intersection point p, all that left is to determine if p is in the triangle.
+Although our problem is 3D, here we are essentially dealing with a 2D problem.
+
+There’re plenty of ways to solve this “is p in the triangle” problem, one formal way is to use “barycentric Coordinates”, 
+here is the definition:
+Barycentric coord of point p w.r.t trangle abc are the real triplets (l, m, n) that satisfy:
+l*a + m*b + n*c = p,    l + m + n = 1.
+
+The physical meaning of barycentric coord (l,m,n) is the mass you put on triangle vertices a, b, c 
+so that the center of gravity is at point p.
+
+Point p is within trangle abc only when its barycentric coord. Satisfy:
+0<l<1,  0<m<1, 0<n<1.
+If any of  l, m, n = 0,  then p is on the edge of triangle abc.
+
+Another way to solve the 2D problem is to use “signed area”.
+Point p w.r.t three edges of triangle abc would give 3 signed areas (by using vector cross product),
+p would be in triangle abc if all 3 signed areas are of the same sign ( because we do not know if a-b-c is CCW or CW)
+
+Then the remaining question is , how do we transform from 3D to 2D ?  
+Strict transformation of x-y plane to plane abc is possible but unnecessary.  
+Notice that linear projection conserve the topology of point triangle relation, 
+we can simply project p and abc to x-y, y-z or x-z plane.  The specific choice depend on if abc is not perpendicular to that plane.  
+This projection is simple because we can just throw away the third coordinate! 
+
+
+-----------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
