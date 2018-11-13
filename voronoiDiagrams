@@ -1,1 +1,49 @@
 
+--------------------------------
+Voronoi diagram
+---------------------------------
+Given a set of sites in 2D plane:  P = {p1, p2, … pn}.  We can define voronoi region V(pi)  as the set of all points in 2D plane 
+that is closer to pi as to any other site pj.
+
+Geometrically,  the voronoi region V(pi) can be defined by  the enclosure of all  Bisectors Bij between pi and its neighbor pj.  
+More formally,  we have:
+let H(pi, pj) be the half plane defined by Bij that contains pi.  Then
+V(pi) = Intersection of all H(pi, pj), where j != i
+The voronoi region of all sites would define voronoi diagram, with the region corners as voronoi vertex.
+
+-------------------------------------
+Delaunay triangulations
+-----------------------------------
+Delaunay triangulations are dual of voronoi diagram.  For each site pi, Simply connect it to all the neighbor sites on the 
+opposite side of edges of voronoi region V(pi), we would get Delaunay triangles.
+
+Note that the center of circle determined by each Delaunay triangle would corresponds to a voronoi vertiex v,  
+we call it C(v),   and interestingly  C(v) would not contain any voronoi site pi  
+(it is an empty circle with voronoi sites on the perimeter)
+
+----------------------------------------
+Construction of voronoi diagram
+-----------------------------------------
+Intuitively, we can do incremental construction of voronoi diagram
+Suppose we already constructed voronoi diagram V for k sites.  Now we add one more site p and would like to update the 
+voronoi diagram V to V’.   We can do the following:
+Assume that for voronoi diagram V,  p falls into several voronoi vertex circiles C(v1), C(v2) … C(vm).  
+Since updated voronoi vertex circle could not contain any site p, 
+those voronoi vertex v1, v2, … vm must be updated. (we will neglect the details here)
+
+A more advanced algorithm is called fortune’s algorithm, 
+which relate the construction of voronoi diagram to parabolic cones of sites.
+Incremental construct is a O(n^2) alg, while fortune’s algorithm is O(nlog n)
+
+----------------------------------
+Nearest neighbor queries
+---------------------------------
+Voronoi diagram provide a partition of space,  for any given point p,  its NN within the voronoi sites p1 to pn is 
+simply the site pi whose voronoi region V(pi) contains p.  
+so the problem reduce to a point location problem and can be solved in O(log n) time (https://en.wikipedia.org/wiki/Point_location)
+
+
+Another problem is that given n points p1, p2…pn,  find NN for each point.
+We can first construct Voronoi diagram/ Delaunay triangulation of all those n points in O(n log n) time. 
+Then the NN of each point would simply be one of its neighbors  that is connected by edges of Delaunay triangles.  
+So finding  NN would be of O(n) + O(n log n) ~ O(n log n)
