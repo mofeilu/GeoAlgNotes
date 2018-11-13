@@ -58,7 +58,80 @@ Point findmin(KDNode t, int d, int cd)
 --------------------------
 delete algorithm
 --------------------------
+general idea: 
 
+assume we want to delete node A,  the cutting dimension of A is cd.
+then if A's right subtree is not empty, we find the minimum node in cd in right subtree, and put it in place of 
+A, then delete that node in right subtree.
+
+if A's right subtree is empty, we need to find the minimum node in cd in left subtree, put it in place of A, then delete 
+that node in left subtree, then move left subtree to right subtree.
+
+The code is as bellow:
+
+Point delete(Point x, KDNode t, int cd)
+{
+  if (t == NULL) return error
+  next_cd = (cd + 1)%dim
+  
+  if (x == t.data) {  // this is the node
+     if (t.right != NULL) {
+        t.data = findmin(t.right, cd, next_cd)
+        t.right = delete(x, t, next_cd)
+     
+     } else if (t.left != NULL) {
+        t.data = findmin(t.left, cd, next_cd)
+        t.right = delete(t.left, t, next_cd)
+        t.left = NULL
+      
+     } else {
+        t = NULL;  // just remove t
+     }
+   
+  } else if (x[cd] < t.data[cd]) { // need to delete in left subtree
+    
+    t.left = delete(x, t.left, next_cd)
+  } else {  // need to delete in right subtree
+    t.right = delete(x, t.right, next_cd)
+  }
+  
+  return t
+}
+
+
+---------------------------
+NN search
+------------------------
+general idea:
+traverse the KD tree, keep cloest point C found so far,  prune subtrees once their bounding 
+box say they could not contain closer points.  Also search subtree that is more promising first.
+
+the code is as bellow:
+
+best, best_dist are global var
+
+void NN(Point Q, kdNode t, int cd, Rect BB)  // BB is bounding box
+{
+   if (t == NULL || distance(Q, BB) > best_dist) return
+   
+   dist = distance(Q, t.data)
+   if (dist < best_dist) {
+     best = t.data
+     best_dist = dist
+   }
+   
+   next_cd = (cd + 1)%dim
+   
+   // visit subtree
+   if (Q[cd] < t.data[cd]) { // we search left tree first
+     NN(Q, t.left, next_cd, BB.trimLeft(cd, t.data) )  // BB of left subtree
+     NN(Q, t.right, next_cd, BB.trimRight(cd, t.data))
+   } else {  // we search right tree first
+     NN(Q, t.right, next_cd, BB.trimRight(cd, t.data))
+     NN(Q, t.left, next_cd, BB.trimLeft(cd, t.data) ) 
+   }
+
+}
 
 
 
